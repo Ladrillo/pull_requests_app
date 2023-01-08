@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consuming Github API</title>
+  <script defer src="./index.js"></script>
+</head>
+
+<body>
+  <div>
+    <h1>Get Open PRs</h1>
+    <form id="openPRForm">
+      <input id="URLInput" type="text" style="width:400px;" placeholder="enter URL of repo"
+        value="https://github.com/facebook/react" />
+      <label for="URLInput">URL of repo</label><br />
+
+      <select id="resultsPerPageSelect">
+        <option value="1">1</option>
+        <option value="30">30</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+      </select>
+      <label for="resultsPerPageSelect">Limit</label><br />
+
+      <select id="pageNumberSelect">
+        <!-- we need to set the options dynamically -->
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <label for="pageNumberSelect">Page</label><br />
+      <input type="submit" />
+    </form>
+  </div>
+</body>
+
+</html>
