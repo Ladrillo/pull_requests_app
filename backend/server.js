@@ -40,13 +40,18 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
 
-    const dataForClient = jsonPRs.map(pr => ({
-      id: pr.id,
-      number: pr.number,
-      title: pr.title,
-      author: pr.user.login,
-      commits: jsonCommits,
-    }))
+    const dataForClient = jsonPRs.map((pr, idx) => {
+      return {
+        id: pr.id,
+        number: pr.number,
+        title: pr.title,
+        author: pr.user.login,
+        commit_count: jsonCommits[idx].length,
+        commits: jsonCommits[idx].map(commit => {
+          return commit.commit.message
+        }),
+      }
+    })
     res.json(dataForClient)
   } catch (error) {
     next(error)
