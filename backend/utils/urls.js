@@ -1,3 +1,5 @@
+const { origin } = require('../../config.js')
+
 function openPRsURL({ user, repo, limit, page }) {
   const url = `https://api.github.com/repos/${user}/${repo}/pulls?state=open&per_page=${limit}&page=${page}`
   return url
@@ -9,7 +11,7 @@ function commitsPRURL({ user, repo, number }) {
 }
 
 function openPRsURLPublic({ repoURLEncoded, limit, page }) {
-  const url = `/api/openprs?repo=${repoURLEncoded}&limit=${limit}&page=${page}`
+  const url = `${origin}/api/openprs?repo=${repoURLEncoded}&limit=${limit}&page=${page}`
   return url
 }
 
