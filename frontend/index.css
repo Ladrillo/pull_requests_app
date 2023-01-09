@@ -1,5 +1,5 @@
 #spinner {
-  opacity: 0.7;
+  opacity: 0.8;
   position: absolute;
   top: 0;
   left: 0;
@@ -23,4 +23,10 @@
 }
 input, select {
   margin-bottom: 0.5rem;
+}
+input[type=text] {
+  width: 350px;
+}
+#pageNumberSelect, label[for=pageNumberSelect] {
+  visibility: hidden;
 }

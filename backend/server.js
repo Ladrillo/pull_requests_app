@@ -10,7 +10,7 @@ const server = express()
 
 server.use(express.static(path.join(__dirname, '../frontend')))
 
-server.get('/doit', parseRepoURL, async (req, res, next) => {
+server.get('/openprs', parseRepoURL, async (req, res, next) => {
   try {
     const headers = gitHubAPIHeadersSet()
 

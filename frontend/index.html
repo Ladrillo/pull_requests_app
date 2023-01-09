@@ -15,7 +15,7 @@
   <div>
     <h1>Get Open PRs</h1>
     <form id="openPRForm">
-      <input id="URLInput" type="text" style="width:400px;" placeholder="enter URL of repo"
+      <input id="URLInput" type="text" placeholder="enter URL of repo"
         value="https://github.com/facebook/react" />
       <label for="URLInput">URL of repo</label><br />
 
@@ -28,20 +28,21 @@
       <label for="resultsPerPageSelect">Limit</label><br />
 
       <select id="pageNumberSelect">
-        <!-- we need to set the options dynamically -->
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
       </select>
       <label for="pageNumberSelect">Page</label><br />
+
       <input type="submit" />
     </form><br />
-    <button disabled id="firstButton">first</button>
+    <button disabled id="firstButton">newest</button>
     <button disabled id="prevButton">prev</button>
     <button disabled id="nextButton">next</button>
-    <button disabled id="lastButton">last</button>
+    <button disabled id="lastButton">oldest</button>
     <p id="errorMessage"></p>
     <p id="rateLimit"></p>
+    <ul id="prs"></ul>
   </div>
 </body>
 

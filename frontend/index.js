@@ -11,6 +11,7 @@
   const pagination = { first: firstButton, prev: prevButton, next: nextButton, last: lastButton }
   const ratelimit = document.querySelector('#rateLimit')
   const spinner = document.querySelector('#spinner')
+  const prs = document.querySelector('#prs')
 
   const setClickHandlers = (links) => {
     for (let direction in pagination) {
@@ -35,23 +36,42 @@
   }
 
   const makeRequest = async (url) => {
-    errorMessage.textContent = ''
-    spinner.classList.remove('off')
-    const response = await fetch(url)
-    const json = await response.json()
-    spinner.classList.add('off')
-    console.log(json)
+    try {
+      prs.innerHTML = ''
+      ratelimit.innerHTML = ''
+      errorMessage.textContent = ''
+      spinner.classList.remove('off')
+      const response = await fetch(url)
+      const json = await response.json()
+      spinner.classList.add('off')
 
-    if (response.status !== 200) {
-      errorMessage.textContent = json.message
-    } else {
-      if (json.links) {
-        setClickHandlers(json.links)
+      if (response.status !== 200) {
+        errorMessage.textContent = json.message
+      } else {
+        drawPRs(json.data)
+        console.log(json)
+        if (json.links) {
+          setClickHandlers(json.links)
+        }
+        if (json.rateLimitRemaining) {
+          ratelimit.textContent = `
+            See the Console and Network tabs for more info. ${json.rateLimitRemaining} requests left!
+          `
+        }
       }
-      if (json.rateLimitRemaining) {
-        ratelimit.textContent = `${json.rateLimitRemaining} requests left!`
-      }
+    } catch (error) {
+      console.error(error.message)
+      errorMessage.textContent = error.message || 'Something went horribly wrong... Please reload the page.'
     }
+  }
+
+  const drawPRs = data => {
+    prs.innerHTML = ''
+    data.forEach(pr => {
+      const li = document.createElement('li')
+      li.textContent = `[${pr.number}] ${pr.title}`
+      prs.append(li)
+    })
   }
 
   const submit = async evt => {
@@ -62,10 +82,10 @@
       const repoRaw = URLInput.value.trim()
       const repo = encodeURIComponent(repoRaw)
 
-      await makeRequest(`/doit?repo=${repo}&limit=${limit}&page=${page}`)
+      await makeRequest(`/openprs?repo=${repo}&limit=${limit}&page=${page}`)
     } catch (error) {
       console.error(error.message)
-      errorMessage.textContent = 'Something went horribly wrong... Please reload the page.'
+      errorMessage.textContent = error.message || 'Something went horribly wrong... Please reload the page.'
     }
   }
 
