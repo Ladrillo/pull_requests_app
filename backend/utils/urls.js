@@ -9,7 +9,7 @@ function commitsPRURL({ user, repo, number }) {
 }
 
 function openPRsURLPublic({ repoURLEncoded, limit, page }) {
-  const url = `/openprs?repo=${repoURLEncoded}&limit=${limit}&page=${page}`
+  const url = `/api/openprs?repo=${repoURLEncoded}&limit=${limit}&page=${page}`
   return url
 }
 

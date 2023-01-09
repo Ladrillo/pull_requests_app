@@ -82,7 +82,7 @@
       const repoRaw = URLInput.value.trim()
       const repo = encodeURIComponent(repoRaw)
 
-      await makeRequest(`/openprs?repo=${repo}&limit=${limit}&page=${page}`)
+      await makeRequest(`/api/openprs?repo=${repo}&limit=${limit}&page=${page}`)
     } catch (error) {
       console.error(error.message)
       errorMessage.textContent = error.message || 'Something went horribly wrong... Please reload the page.'
