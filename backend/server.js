@@ -1,33 +1,26 @@
 const path = require('path')
 const express = require('express')
-const parse = require('parse-link-header')
 
 const { errorHandling } = require('./middleware/error_handling.js')
-const { parseGitHubURL } = require('./middleware/validation.js')
-const { gitHubAPIHeaders } = require('./utils/headers.js')
+const { parseRepoURL } = require('./middleware/validation.js')
+const { gitHubAPIHeadersGet, gitHubAPIHeadersSet } = require('./utils/headers.js')
 const { openPRsURL, commitsPRURL, openPRsPaginationLinks } = require('./utils/urls.js')
 
 const server = express()
 
 server.use(express.static(path.join(__dirname, '../frontend')))
 
-server.get('/doit', parseGitHubURL, async (req, res, next) => {
+server.get('/doit', parseRepoURL, async (req, res, next) => {
   try {
-    const headers = gitHubAPIHeaders()
+    const headers = gitHubAPIHeadersSet()
 
-    const { repo, user } = req.repoData
+    const { repo, user, repoURLEncoded } = req.repoData
     const { page = 1, limit = 100 } = req.query
     const urlPRs = openPRsURL({ user, repo, limit, page })
 
     const responsePRs = await fetch(urlPRs, { headers })
+    const responseHeaders = gitHubAPIHeadersGet(responsePRs.headers)
 
-    const githubResponseHeaders = responsePRs.headers.entries()
-    const headersForClient = []
-    for (let header of githubResponseHeaders) {
-      headersForClient.push(header)
-    }
-    const linksHeader = headersForClient.find(header => header[0] === 'link')[1];
-    const parsedLinksHeader = parse(linksHeader)
     const jsonPRs = await responsePRs.json()
     const commitPromises = jsonPRs.map(pr => {
       const urlCommits = commitsPRURL({ user, repo, number: pr.number })
@@ -36,12 +29,12 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
 
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
-    const links = openPRsPaginationLinks(parsedLinksHeader, { repo, user })
-    // Object.keys(parsedLinksHeader).forEach(link => {
-    //   links[link] = `doit`
-    // })
+    const links = openPRsPaginationLinks(responseHeaders.links, repoURLEncoded)
+    const { rateLimitRemaining } = responseHeaders
+
     const dataForClient = {
       links,
+      rateLimitRemaining,
       data: jsonPRs.map((pr, idx) => {
         return {
           id: pr.id,

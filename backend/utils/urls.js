@@ -8,21 +8,17 @@ function commitsPRURL({ user, repo, number }) {
   return url
 }
 
-/*
-rawLinks has the following shape
+function openPRsURLPublic({ repoURLEncoded, limit, page }) {
+  const url = `/doit?repo=${repoURLEncoded}&limit=${limit}&page=${page}`
+  return url
+}
 
-first: {state: 'open', per_page: '1', page: '1', rel: 'first', url: 'https://api.github.com/repositories/10270250/pulls?state=open&per_page=1&page=1'}
-last: {state: 'open', per_page: '1', page: '250', rel: 'last', url: 'https://api.github.com/repositories/10270250/pulls?state=open&per_page=1&page=250'}
-next: {state: 'open', per_page: '1', page: '3', rel: 'next', url: 'https://api.github.com/repositories/10270250/pulls?state=open&per_page=1&page=3'}
-prev: {state: 'open', per_page: '1', page: '1', rel: 'prev', url: 'https://api.github.com/repositories/10270250/pulls?state=open&per_page=1&page=1'}
-*/
-function openPRsPaginationLinks(rawLinks, { user, repo }) {
+function openPRsPaginationLinks(rawLinks, repoURLEncoded) {
   let result = {}
   for (let link in rawLinks) {
-    const { per_page, rel, page } = rawLinks[link]
+    const { per_page, page } = rawLinks[link]
     result[link] = {
-      url: openPRsURL({ user, repo, page, limit: per_page }),
-      rel,
+      url: openPRsURLPublic({ repoURLEncoded, limit: per_page, page }),
     }
   }
   return result
@@ -31,5 +27,6 @@ function openPRsPaginationLinks(rawLinks, { user, repo }) {
 module.exports = {
   openPRsURL,
   commitsPRURL,
+  openPRsURLPublic,
   openPRsPaginationLinks,
 }

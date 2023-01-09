@@ -1,9 +1,8 @@
 require('dotenv').config()
 
+const { port } = require('./config.js')
 const server = require('./backend/server.js')
 
-const PORT = 9000
-
-server.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`)
+server.listen(port, () => {
+  console.log(`Listening on ${port}`)
 })
