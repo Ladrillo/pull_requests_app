@@ -16,11 +16,11 @@ function parseRepoURL(req, res, next) {
   }
   else {
     next({
-      status: 422, message: `Invalid repo URL. Please provide a URL in the following patterns:
-        git://github.com/some-user/my-repo.git
-        git@github.com:some-user/my-repo.git
-        https://github.com/some-user/my-repo.git
-        https://github.com/some-user/my-repo
+      status: 422, message: `Invalid repo URL. Please provide URL in the following format:
+        "git://github.com/user/repo.git" or
+        "git@github.com:user/repo.git" or
+        "https://github.com/user/repo.git" or
+        "https://github.com/user/repo"
       `
     })
   }

@@ -35,6 +35,7 @@
   }
 
   const makeRequest = async (url) => {
+    errorMessage.textContent = ''
     spinner.classList.remove('off')
     const response = await fetch(url)
     const json = await response.json()

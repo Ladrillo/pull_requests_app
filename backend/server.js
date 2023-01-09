@@ -22,6 +22,10 @@ server.get('/doit', parseRepoURL, async (req, res, next) => {
     const responseHeaders = gitHubAPIHeadersGet(responsePRs.headers)
 
     const jsonPRs = await responsePRs.json()
+
+    if (jsonPRs.message === 'Not Found') {
+      return next({ status: 404, message: 'Repository not found. Fix the URL and try again...' })
+    }
     const commitPromises = jsonPRs.map(pr => {
       const urlCommits = commitsPRURL({ user, repo, number: pr.number })
       return fetch(urlCommits, { headers })
