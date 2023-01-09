@@ -17,7 +17,7 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
 
     const { repo, user } = req.repoData
     const { page = 1, limit = 100 } = req.query
-    const urlPRs = openPRsURL(user, repo, limit, page)
+    const urlPRs = openPRsURL({ user, repo, limit, page })
 
     const responsePRs = await fetch(urlPRs, { headers })
 
@@ -30,19 +30,19 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
     const parsedLinksHeader = parse(linksHeader)
     const jsonPRs = await responsePRs.json()
     const commitPromises = jsonPRs.map(pr => {
-      const urlCommits = commitsPRURL(user, repo, pr.number)
+      const urlCommits = commitsPRURL({ user, repo, number: pr.number })
       return fetch(urlCommits, { headers })
     })
 
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
     const links = {}
-    Object.keys(parsedLinksHeader).forEach(link => {
-      links[link] = `doit`
-    })
+    // Object.keys(parsedLinksHeader).forEach(link => {
+    //   links[link] = `doit`
+    // })
     const dataForClient = {
       linky: req.url,
-      links,
+      links: parsedLinksHeader,
       data: jsonPRs.map((pr, idx) => {
         return {
           id: pr.id,
