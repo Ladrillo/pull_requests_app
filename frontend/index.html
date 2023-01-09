@@ -15,15 +15,13 @@
   <div>
     <h1>Get Open PRs</h1>
     <form id="openPRForm">
-      <input id="URLInput" type="text" placeholder="enter URL of repo"
-        value="https://github.com/facebook/react" />
+      <input id="URLInput" type="text" placeholder="enter URL of repo" value="https://github.com/expressjs/express" />
       <label for="URLInput">URL of repo</label><br />
 
       <select id="resultsPerPageSelect">
         <option value="1">1</option>
         <option value="5">5</option>
         <option value="30">30</option>
-        <option value="100">100</option>
       </select>
       <label for="resultsPerPageSelect">Limit</label><br />
 
@@ -37,13 +35,14 @@
       <input type="submit" />
     </form><br />
 
+    <p id="errorMessage"></p>
+    <p id="rateLimit"></p>
+    <ul id="prs"></ul>
+
     <button disabled id="firstButton">Newest</button>
     <button disabled id="prevButton">Prev</button>
     <button disabled id="nextButton">Next</button>
     <button disabled id="lastButton">Oldest</button>
-    <p id="errorMessage"></p>
-    <p id="rateLimit"></p>
-    <ul id="prs"></ul>
   </div>
 </body>
 
