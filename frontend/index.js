@@ -10,6 +10,7 @@
   const lastButton = document.querySelector('#lastButton')
   const pagination = { first: firstButton, prev: prevButton, next: nextButton, last: lastButton }
   const ratelimit = document.querySelector('#rateLimit')
+  const spinner = document.querySelector('#spinner')
 
   const setClickHandlers = (links) => {
     for (let direction in pagination) {
@@ -34,8 +35,10 @@
   }
 
   const makeRequest = async (url) => {
+    spinner.classList.remove('off')
     const response = await fetch(url)
     const json = await response.json()
+    spinner.classList.add('off')
     console.log(json)
 
     if (response.status !== 200) {

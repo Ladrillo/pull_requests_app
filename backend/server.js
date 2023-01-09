@@ -30,11 +30,13 @@ server.get('/doit', parseRepoURL, async (req, res, next) => {
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
     const links = openPRsPaginationLinks(responseHeaders.links, repoURLEncoded)
-    const { rateLimitRemaining } = responseHeaders
+
+    const resRateLimit = await fetch('https://api.github.com/rate_limit', { headers })
+    const rateLimit = await resRateLimit.json()
 
     const dataForClient = {
       links,
-      rateLimitRemaining,
+      rateLimitRemaining: rateLimit.rate.remaining,
       data: jsonPRs.map((pr, idx) => {
         return {
           id: pr.id,

@@ -6,10 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Consuming Github API</title>
+  <link rel="stylesheet" href="./index.css" />
   <script defer src="./index.js"></script>
 </head>
 
 <body>
+  <div id="spinner" class="off">Please wait...</div>
   <div>
     <h1>Get Open PRs</h1>
     <form id="openPRForm">
@@ -38,8 +40,8 @@
     <button disabled id="prevButton">prev</button>
     <button disabled id="nextButton">next</button>
     <button disabled id="lastButton">last</button>
-    <p style="color:red;" id="errorMessage"></p>
-    <p style="font-style:bold;" id="rateLimit"></p>
+    <p id="errorMessage"></p>
+    <p id="rateLimit"></p>
   </div>
 </body>
 
