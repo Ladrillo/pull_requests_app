@@ -37,6 +37,7 @@
 
   const makeRequest = async (url) => {
     try {
+      Object.values(pagination).forEach(btn => btn.disabled = true)
       prs.innerHTML = ''
       ratelimit.innerHTML = ''
       errorMessage.textContent = ''
