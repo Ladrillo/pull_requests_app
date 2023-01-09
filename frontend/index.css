@@ -33,3 +33,9 @@ input[type=text] {
 #pageNumberSelect, label[for=pageNumberSelect] {
   visibility: hidden;
 }
+li.commit {
+  font-size: 0.85rem;
+}
+li.pr {
+  margin-bottom: 0.25rem;
+}

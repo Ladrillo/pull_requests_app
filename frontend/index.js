@@ -70,7 +70,16 @@
     prs.innerHTML = ''
     data.forEach(pr => {
       const li = document.createElement('li')
+      li.className = 'pr'
+      const ol = document.createElement('ol')
       li.textContent = `[${pr.number}] ${pr.title}`
+      pr.commits.forEach(com => {
+        const li = document.createElement('li')
+        li.className = 'commit'
+        li.textContent = com
+        ol.append(li)
+      })
+      li.append(ol)
       prs.append(li)
     })
   }
