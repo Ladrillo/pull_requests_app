@@ -17,9 +17,8 @@ function openPRsPaginationLinks(rawLinks, repoURLEncoded) {
   let result = {}
   for (let link in rawLinks) {
     const { per_page, page } = rawLinks[link]
-    result[link] = {
-      url: openPRsURLPublic({ repoURLEncoded, limit: per_page, page }),
-    }
+    const url = openPRsURLPublic({ repoURLEncoded, limit: per_page, page })
+    result[link] = { url }
   }
   return result
 }
