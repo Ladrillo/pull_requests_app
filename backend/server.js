@@ -1,9 +1,11 @@
 const path = require('path')
 const express = require('express')
-const parse = require('parse-link-header');
+const parse = require('parse-link-header')
+
 const { errorHandling } = require('./middleware/error_handling.js')
 const { parseGitHubURL } = require('./middleware/validation.js')
-const { authString } = require('../config.js')
+const { gitHubAPIHeaders } = require('./utils/headers.js')
+const { openPRsURL, commitsPRURL } = require('./utils/urls.js')
 
 const server = express()
 
@@ -11,14 +13,11 @@ server.use(express.static(path.join(__dirname, '../frontend')))
 
 server.get('/doit', parseGitHubURL, async (req, res, next) => {
   try {
-    const headers = new Headers
-    headers.set('X-GitHub-Api-Version', '2022-11-28')
-    headers.set('Accept', 'application/vnd.github+json')
-    headers.set('Authorization', `Basic ${authString}`)
+    const headers = gitHubAPIHeaders()
 
     const { repo, user } = req.repoData
     const { page = 1, limit = 100 } = req.query
-    const urlPRs = `https://api.github.com/repos/${user}/${repo}/pulls?state=open&per_page=${limit}&page=${page}`
+    const urlPRs = openPRsURL(user, repo, limit, page)
 
     const responsePRs = await fetch(urlPRs, { headers })
 
@@ -27,19 +26,23 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
     for (let header of githubResponseHeaders) {
       headersForClient.push(header)
     }
-    const linkHeader = headersForClient.find(header => header[0] === 'link')[1];
-    const parsedLinkHeader = parse(linkHeader)
+    const linksHeader = headersForClient.find(header => header[0] === 'link')[1];
+    const parsedLinksHeader = parse(linksHeader)
     const jsonPRs = await responsePRs.json()
     const commitPromises = jsonPRs.map(pr => {
-      const urlCommits = `https://api.github.com/repos/${user}/${repo}/pulls/${pr.number}/commits`
+      const urlCommits = commitsPRURL(user, repo, pr.number)
       return fetch(urlCommits, { headers })
     })
 
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
-
+    const links = {}
+    Object.keys(parsedLinksHeader).forEach(link => {
+      links[link] = `doit`
+    })
     const dataForClient = {
-      links: parsedLinkHeader,
+      linky: req.url,
+      links,
       data: jsonPRs.map((pr, idx) => {
         return {
           id: pr.id,
