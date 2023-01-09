@@ -5,7 +5,7 @@ const parse = require('parse-link-header')
 const { errorHandling } = require('./middleware/error_handling.js')
 const { parseGitHubURL } = require('./middleware/validation.js')
 const { gitHubAPIHeaders } = require('./utils/headers.js')
-const { openPRsURL, commitsPRURL } = require('./utils/urls.js')
+const { openPRsURL, commitsPRURL, openPRsPaginationLinks } = require('./utils/urls.js')
 
 const server = express()
 
@@ -36,13 +36,12 @@ server.get('/doit', parseGitHubURL, async (req, res, next) => {
 
     const responseCommits = await Promise.all(commitPromises)
     const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
-    const links = {}
+    const links = openPRsPaginationLinks(parsedLinksHeader, { repo, user })
     // Object.keys(parsedLinksHeader).forEach(link => {
     //   links[link] = `doit`
     // })
     const dataForClient = {
-      linky: req.url,
-      links: parsedLinksHeader,
+      links,
       data: jsonPRs.map((pr, idx) => {
         return {
           id: pr.id,

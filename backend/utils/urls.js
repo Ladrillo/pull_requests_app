@@ -25,6 +25,7 @@ function openPRsPaginationLinks(rawLinks, { user, repo }) {
       rel,
     }
   }
+  return result
 }
 
 module.exports = {
