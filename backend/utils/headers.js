@@ -5,7 +5,9 @@ function gitHubAPIHeadersSet() {
   const headers = new Headers
   headers.set('X-GitHub-Api-Version', '2022-11-28')
   headers.set('Accept', 'application/vnd.github+json')
-  headers.set('Authorization', `Basic ${authString}`)
+  if (authString) {
+    headers.set('Authorization', `Basic ${authString}`)
+  }
   return headers
 }
 
