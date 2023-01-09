@@ -18,4 +18,4 @@ Stack: ${stack || 'No stack trace'}
   res.status(status || 500).json(response)
 }
 
-module.exports = { errorHandling }
+module.exports = errorHandling
