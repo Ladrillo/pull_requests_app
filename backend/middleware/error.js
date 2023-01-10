@@ -1,4 +1,4 @@
-const errorHandling = (err, req, res, next) => { // eslint-disable-line
+function errorHandling(err, req, res, next) { // eslint-disable-line
   const { message, stack, status } = err
   console.log(`\nERROR START =============\n
 Message: ${message}

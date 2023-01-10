@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 
 const prRouter = require('./api/pull_requests')
-const errorHandling = require('./middleware/error_handling.js')
+const errorHandling = require('./middleware/error.js')
 
 const server = express()
 

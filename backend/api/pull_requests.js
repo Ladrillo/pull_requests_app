@@ -3,47 +3,63 @@ const express = require('express')
 const router = express.Router()
 
 const { parseRepoURL } = require('../middleware/validation.js')
-const { gitHubAPIHeadersGet, gitHubAPIHeadersSet } = require('../utils/headers.js')
-const { openPRsURL, commitsPRURL, openPRsPaginationLinks } = require('../utils/urls.js')
+const { openPRsPaginationLinks } = require('../utils/pagination.js')
+const { getRateLimit, getPullRequests, getPullRequestCommits } = require('../utils/github.js')
 
+/**
+{
+  links: {
+    next: {
+      url: "/api/openprs?repo=https://github.com/expressjs/express&limit=1&page=2",
+    },
+    last: {
+      url: "/api/openprs?repo=https://github.com/expressjs/express&limit=1&page=53",
+    },
+  },
+  rateLimitRemaining: 4855,
+  data: [
+    {
+      id: 1165838603,
+      number: 5063,
+      title: "chore: Add Node.js version 19",
+      author: "sheplu",
+      commit_count: 1,
+      commits: [
+        "chore: Add Node.js version 19",
+      ],
+    },
+  ],
+}
+ */
 router.get('/api/openprs', parseRepoURL, async (req, res, next) => {
   try {
-    const headers = gitHubAPIHeadersSet()
-
-    const { repo, user, repoURLEncoded } = req.repoData
+    const { repo, user, repoURL } = req.repoData
     const { page = 1, limit = 100 } = req.query
-    const urlPRs = openPRsURL({ user, repo, limit, page })
 
-    const responsePRs = await fetch(urlPRs, { headers })
-    const jsonPRs = await responsePRs.json()
+    const [pullRequests, { link }] = await getPullRequests({ user, repo, limit, page })
 
-    if (jsonPRs.message === 'Not Found') {
+    if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: 'Repository not found. Fix the URL and try again...' })
     }
 
-    const commitPromises = jsonPRs.map(pr => {
-      const urlCommits = commitsPRURL({ user, repo, number: pr.number })
-      return fetch(urlCommits, { headers })
+    const commitPromises = pullRequests.map(pr => {
+      return getPullRequestCommits({ user, repo, number: pr.number })
     })
-    const responseCommits = await Promise.all(commitPromises)
-    const jsonCommits = await Promise.all(responseCommits.map(res => res.json()))
-    const resRateLimit = await fetch('https://api.github.com/rate_limit', { headers })
-    const rateLimit = await resRateLimit.json()
 
-    const responseHeaders = gitHubAPIHeadersGet(responsePRs.headers)
-    const links = openPRsPaginationLinks(responseHeaders.links, repoURLEncoded)
+    const commits = await Promise.all(commitPromises)
+    const [rateLimit] = await getRateLimit()
 
     const dataForClient = {
-      links,
+      links: link ? openPRsPaginationLinks(link, encodeURI(repoURL)) : null,
       rateLimitRemaining: rateLimit.rate.remaining,
-      data: jsonPRs.map((pr, idx) => {
+      data: pullRequests.map((pr, idx) => {
         return {
           id: pr.id,
           number: pr.number,
           title: pr.title,
           author: pr.user.login,
-          commit_count: jsonCommits[idx].length,
-          commits: jsonCommits[idx].map(commit => {
+          commit_count: commits[idx][0].length,
+          commits: commits[idx][0].map(commit => {
             return commit.commit.message
           }),
         }

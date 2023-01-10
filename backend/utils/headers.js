@@ -1,5 +1,4 @@
 const { authString } = require('../../config.js')
-const parse = require('parse-link-header')
 
 function gitHubAPIHeadersSet() {
   const headers = new Headers
@@ -13,15 +12,9 @@ function gitHubAPIHeadersSet() {
 
 function gitHubAPIHeadersGet(headers) {
   const githubResponseHeaders = headers.entries()
-  const result = { rawHeaders: {} }
+  const result = {}
   for (let header of githubResponseHeaders) {
-    result.rawHeaders[header[0]] = header[1]
-  }
-  if (result.rawHeaders['x-ratelimit-remaining']) {
-    result.rateLimitRemaining = result.rawHeaders['x-ratelimit-remaining']
-  }
-  if (result.rawHeaders['link']) {
-    result.links = parse(result.rawHeaders['link'])
+    result[header[0]] = header[1]
   }
   console.log(result)
   return result

@@ -10,7 +10,6 @@ function parseRepoURL(req, res, next) {
       user,
       repo,
       repoURL: req.query.repo,
-      repoURLEncoded: encodeURI(req.query.repo),
     }
     next()
   }
