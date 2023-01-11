@@ -18,7 +18,7 @@ describe('[GET] /openprs', () => {
       expect(res.status).toBe(404)
       expect(res.body).toMatchObject({ message: errors.nonExistingRepo })
     })
-    test('repo not found due to non-Github repo URL', async () => {
+    test('repo not found due to incorrect URL format', async () => {
       const badRepo = 'https://github.com'
       const badURL = `/api/openprs?repo=${badRepo}`
       const res = await request(server).get(badURL)
