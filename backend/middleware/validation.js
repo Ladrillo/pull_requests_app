@@ -6,21 +6,17 @@ function parseRepoURL(req, res, next) {
   if (checksOut) {
     let { groups: { user, repo } } = regex.exec(req.query.repo)
     if (/\.git$/.test(repo)) repo = repo.slice(0, repo.length - 4)
-    req.repoData = {
-      user,
-      repo,
-      repoURL: req.query.repo,
-    }
+    req.repoData = { user, repo, repoURL: req.query.repo }
     next()
   }
   else {
     next({
-      status: 422, message: `Invalid repo URL. Please provide URL in the following format:
+      status: 422, message: `Invalid repo URL.
+        Please provide URL in the following format:
         "git://github.com/user/repo.git" or
         "git@github.com:user/repo.git" or
         "https://github.com/user/repo.git" or
-        "https://github.com/user/repo"
-      `
+        "https://github.com/user/repo"`
     })
   }
 }
