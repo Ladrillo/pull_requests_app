@@ -37,3 +37,6 @@ li.commit {
 li.pr {
   margin-bottom: 0.25rem;
 }
+button {
+  margin-right: 0.25rem;
+}
