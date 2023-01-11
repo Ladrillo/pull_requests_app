@@ -12,4 +12,7 @@ Message: ${message}
 Status: ${status || 'No status code'}
 Stack: ${stack || 'No stack trace'}
 \nERROR END ===============\n`,
+  repoNameRequired: 'repo name is required',
+  ownerOfRepoRequired: 'owner of repo is required',
+  limitBetween1and100: 'limit between 1 and 100',
 }

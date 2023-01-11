@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const errors = require('../constants/errorStrings.js')
-const { parseRepoURL } = require('../middleware/validation.js')
+const { validateOpenPRsQuery } = require('../middleware/validation.js')
 const { openPRsPaginationLinks } = require('../utils/pagination.js')
 const {
   getRateLimit,
@@ -10,9 +10,9 @@ const {
   getPullRequestCommits,
 } = require('../utils/github.js')
 
-router.get('/api/openprs', parseRepoURL, async (req, res, next) => {
+router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
   try {
-    const { repo, user, repoURL } = req.repoData
+    const { repo, user, repoURL } = JSON.parse(req.query.repo)
     const { page = 1, limit = 100 } = req.query
     const [pullRequests, { link }] = await getPullRequests({ user, repo, limit, page })
     if (pullRequests.message === 'Not Found') {
