@@ -1,6 +1,5 @@
 (function () {
   const resultsPerPageSelect = document.querySelector('#resultsPerPageSelect')
-  const pageNumberSelect = document.querySelector('#pageNumberSelect')
   const openPRForm = document.querySelector('#openPRForm')
   const URLInput = document.querySelector('#URLInput')
   const errorMessage = document.querySelector('#errorMessage')
@@ -88,11 +87,10 @@
     evt.preventDefault()
     try {
       const limit = resultsPerPageSelect.value
-      const page = pageNumberSelect.value
       const repoRaw = URLInput.value.trim()
       const repo = encodeURIComponent(repoRaw)
 
-      await makeRequest(`/api/openprs?repo=${repo}&limit=${limit}&page=${page}`)
+      await makeRequest(`/api/openprs?repo=${repo}&limit=${limit}&page=${1}`)
     } catch (error) {
       console.error(error.message)
       errorMessage.textContent = error.message || 'Something went horribly wrong... Please reload the page.'
