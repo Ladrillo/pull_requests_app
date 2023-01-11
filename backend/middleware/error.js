@@ -1,11 +1,8 @@
+const errors = require('../constants/errorStrings.js')
+
 function errorHandling(err, req, res, next) { // eslint-disable-line
   const { message, stack, status } = err
-  console.log(`\nERROR START =============\n
-Message: ${message}
-Status: ${status || 'No status code'}
-Stack: ${stack || 'No stack trace'}
-\nERROR END ===============\n`)
-
+  console.log(errors.serverLogs({ message, stack, status }))
   const response = {}
   if ((process.env.NODE_ENV !== 'production') && stack) {
     response.stack = stack
@@ -13,7 +10,7 @@ Stack: ${stack || 'No stack trace'}
   if (status !== 500) {
     response.message = err.message
   } else {
-    response.message = 'Something bad and unexpected happened'
+    response.message = errors.unknownError
   }
   res.status(status || 500).json(response)
 }

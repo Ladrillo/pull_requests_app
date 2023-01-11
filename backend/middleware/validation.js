@@ -1,3 +1,5 @@
+const errors = require('../constants/errorStrings.js')
+
 function parseRepoURL(req, res, next) {
   // Credit for regex to Hicham https://serverfault.com/a/917253
   // eslint-disable-next-line
@@ -10,14 +12,7 @@ function parseRepoURL(req, res, next) {
     next()
   }
   else {
-    next({
-      status: 422, message: `Invalid repo URL.
-        Please provide URL in the following format:
-        "git://github.com/user/repo.git" or
-        "git@github.com:user/repo.git" or
-        "https://github.com/user/repo.git" or
-        "https://github.com/user/repo"`
-    })
+    next({ status: 422, message: errors.improperRepoURL })
   }
 }
 
