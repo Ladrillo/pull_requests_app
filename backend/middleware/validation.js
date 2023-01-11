@@ -51,7 +51,7 @@ async function validateOpenPRsQuery(req, res, next) {
     req.query = cast
     next()
   } catch (err) {
-    next({ status: 422, message: errors.improperRepoURL })
+    next({ status: 422, message: errors.improperRepoURL, situation: err.message })
   }
 }
 
