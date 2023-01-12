@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "jest"
+    "test": "jest --silent --verbose"
   },
   "author": "Gabriel Cabrejas",
   "license": "MIT",

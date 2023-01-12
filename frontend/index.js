@@ -53,9 +53,9 @@
         if (json.links) {
           setClickHandlers(json.links)
         }
-        if (json.rateLimitRemaining) {
+        if (json.github_api?.rate_limit) {
           ratelimit.textContent = `
-            See the Console and Network tabs for more info. ${json.rateLimitRemaining} requests left!
+            See the Console and Network tabs for more info. ${json.rate_limit} requests left!
           `
         }
       }

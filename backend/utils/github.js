@@ -6,7 +6,7 @@ async function getRequest(url) {
     const res = await fetch(url, { headers })
     const json = await res.json()
     const resHeaders = gitHubAPIHeadersGet(res.headers)
-    return [json, resHeaders]
+    return [json, resHeaders, url]
   } catch (error) {
     console.log(error)
     throw error

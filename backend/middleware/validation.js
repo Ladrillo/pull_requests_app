@@ -8,6 +8,7 @@ const fields = {
   page: {
     schema: () => yup
       .number()
+      .default(1)
       .transform(
         function (page) {
           const parsed = parseInt(page)
@@ -18,6 +19,7 @@ const fields = {
   limit: {
     schema: () => yup
       .number()
+      .default(1)
       .transform(
         function (limit) {
           const parsed = parseInt(limit)
@@ -28,7 +30,7 @@ const fields = {
   repo: {
     schema: () => yup
       .string()
-      .required(errors.repoNameRequired)
+      .required()
       .test(
         'gitHubRepoURLProper',
         errors.improperRepoURL,
@@ -50,6 +52,7 @@ const fields = {
       )
   },
 }
+
 const optionsQueryOpenPRsSchema = yup.object().shape({
   repo: fields.repo.schema(),
   page: fields.page.schema(),

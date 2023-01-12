@@ -14,7 +14,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
   try {
     const { page, limit } = req.query
     const { repoURL, repo, user } = JSON.parse(req.query.repo)
-    const [pullRequests, { link }] = await getPullRequests({ user, repo, limit, page })
+
+    const [pullRequests, { link }, url] = await getPullRequests({ user, repo, limit, page })
     if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: errors.nonExistingRepo })
     }
@@ -24,8 +25,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
     const commits = await Promise.all(commitPromises)
     const [rateLimit] = await getRateLimit()
     const dataForClient = {
+      github_api: { url, rate_limit: rateLimit.rate.remaining },
       links: link ? openPRsPaginationLinks(link, encodeURI(repoURL)) : null,
-      rateLimitRemaining: rateLimit.rate.remaining,
       data: pullRequests.map((pr, idx) => {
         const { id, number, title, author } = pr
         return {
