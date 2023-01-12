@@ -26,7 +26,7 @@ Visit this [WEB APP](https://pr-app.herokuapp.com/) to see the API in action.
 
 This app is a thin wrapper around the GitHub API.
 
-It currently supports a single endpoint but is built to scale a bit more.
+It currently supports an endpoint to **fetch open pull requests of a repo**, along with the commits of each pr.
 
 `[GET] https://pr-app.herokuapp.com/api/openprs?repo={repo}&limit={limit}&page={page}`
 
