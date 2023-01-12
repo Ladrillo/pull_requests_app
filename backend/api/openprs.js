@@ -17,10 +17,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
 
     const [pullRequests, headers, url] = await getPullRequests({ user, repo, limit, page })
     if (headers['x-ratelimit-remaining'] == 0) {
+      // todo, this is a bit sketchy
       return next({ status: 429, message: errors.requestLimitReached })
-    }
-    if (pullRequests.message === 'Not Found') {
-      return next({ status: 404, message: errors.nonExistingRepo })
     }
     if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: errors.nonExistingRepo })
