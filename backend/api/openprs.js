@@ -16,8 +16,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
     const { repoURL, repo, user } = JSON.parse(req.query.repo)
 
     const [pullRequests, headers, url] = await getPullRequests({ user, repo, limit, page })
+    // TODO: if we hit the rate limit this is sketchy
     if (headers['x-ratelimit-remaining'] == 0) {
-      // todo, this is a bit sketchy
       return next({ status: 429, message: errors.requestLimitReached })
     }
     if (pullRequests.message === 'Not Found') {
@@ -33,8 +33,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
       links: headers.link ? openPRsPaginationLinks(headers.link, encodeURI(repoURL)) : null,
       data: pullRequests.map((pr, idx) => {
         const { id, number, title, author } = pr
+        // TODO: if we hit the rate limit this is sketchy
         const commit_count = commits[idx][0].length
-        // todo, if we hit the rate limit this is sketchy
         const com = commits[idx][0]?.map(commit => commit.commit.message)
         const result = { id, number, title, author, commit_count, commits: com }
         return result
