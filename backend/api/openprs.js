@@ -12,8 +12,8 @@ const {
 
 router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
   try {
-    const { repo, user, repoURL } = JSON.parse(req.query.repo)
-    const { page = 1, limit = 100 } = req.query
+    const { page, limit } = req.query
+    const { repoURL, repo, user } = JSON.parse(req.query.repo)
     const [pullRequests, { link }] = await getPullRequests({ user, repo, limit, page })
     if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: errors.nonExistingRepo })

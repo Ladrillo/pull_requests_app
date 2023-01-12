@@ -8,14 +8,22 @@ const fields = {
   page: {
     schema: () => yup
       .number()
-      .min(1, errors.limitBetween1and100)
-      .max(100, errors.limitBetween1and100)
+      .transform(
+        function (page) {
+          const parsed = parseInt(page)
+          return (parsed && parsed <= 100 && parsed > 0) ? parsed : 1
+        }
+      )
   },
   limit: {
     schema: () => yup
       .number()
-      .min(1, errors.limitBetween1and100)
-      .max(100, errors.limitBetween1and100)
+      .transform(
+        function (limit) {
+          const parsed = parseInt(limit)
+          return (parsed && parsed <= 100 && parsed > 0) ? parsed : 1
+        }
+      )
   },
   repo: {
     schema: () => yup
@@ -31,15 +39,18 @@ const fields = {
       )
       .transform(
         function (url) {
-          let { groups: { user, repo } } = gitHubRepoURLRegex.exec(url)
-          if (/\.git$/.test(repo)) repo = repo.slice(0, repo.length - 4)
-          return JSON.stringify({ user, repo, repoURL: url })
+          let result = gitHubRepoURLRegex.exec(url)
+          if (result) {
+            let { groups: { user, repo } } = result
+            if (/\.git$/.test(repo)) repo = repo.slice(0, repo.length - 4)
+            return JSON.stringify({ user, repo, repoURL: url })
+          }
+          return null
         }
       )
   },
 }
-
-const optionsQueryOpenPRs = yup.object().shape({
+const optionsQueryOpenPRsSchema = yup.object().shape({
   repo: fields.repo.schema(),
   page: fields.page.schema(),
   limit: fields.limit.schema(),
@@ -47,11 +58,11 @@ const optionsQueryOpenPRs = yup.object().shape({
 
 async function validateOpenPRsQuery(req, res, next) {
   try {
-    const cast = await optionsQueryOpenPRs.validate(req.query, { stripUnknown: true })
+    const cast = await optionsQueryOpenPRsSchema.validate(req.query, { stripUnknown: true })
     req.query = cast
     next()
   } catch (err) {
-    next({ status: 422, message: errors.improperRepoURL, situation: err.message })
+    next({ status: 422, message: `${errors.improperRepoURL}` })
   }
 }
 
