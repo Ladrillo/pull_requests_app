@@ -6,9 +6,7 @@ const gitHubRepoURLRegex = /^(https|git)(:\/\/|@)([^\/:]+)[\/:](?<user>[^\/:]+)\
 
 const fields = {
   page: {
-    schema: () => yup
-      .number()
-      .default(1)
+    schema: () => yup.number().default(1)
       .transform(
         function (page) {
           const parsed = parseInt(page)
@@ -17,9 +15,7 @@ const fields = {
       )
   },
   limit: {
-    schema: () => yup
-      .number()
-      .default(1)
+    schema: () => yup.number().default(1)
       .transform(
         function (limit) {
           const parsed = parseInt(limit)
@@ -28,9 +24,7 @@ const fields = {
       )
   },
   repo: {
-    schema: () => yup
-      .string()
-      .required()
+    schema: () => yup.string().required()
       .test(
         'gitHubRepoURLProper',
         errors.improperRepoURL,
