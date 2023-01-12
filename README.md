@@ -72,8 +72,9 @@ Example of response:
 ### Features
 
 - Scalable architecture, more endpoints could be added in a maintainable manner.
-- Supports four different formats for the repo URL (credit for Regex to [Hicham](https://serverfault.com/a/917253))
-- Simple to use, on improper page & limit params 1 & 1 are used.
+- Endpoint supports four different formats for the repo URL (credit for Regex to [Hicham](https://serverfault.com/a/917253))
+- Endpoint simple to use, on improper page & limit params 1 & 1 are used.
+- Pagination of results.
 
 ### Limitations
 
