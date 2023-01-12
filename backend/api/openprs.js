@@ -15,10 +15,17 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
     const { page, limit } = req.query
     const { repoURL, repo, user } = JSON.parse(req.query.repo)
 
-    const [pullRequests, { link }, url] = await getPullRequests({ user, repo, limit, page })
+    const [pullRequests, headers, url] = await getPullRequests({ user, repo, limit, page })
+    if (headers['x-ratelimit-remaining'] == 0) {
+      return next({ status: 429, message: errors.requestLimitReached })
+    }
     if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: errors.nonExistingRepo })
     }
+    if (pullRequests.message === 'Not Found') {
+      return next({ status: 404, message: errors.nonExistingRepo })
+    }
+    console.log(pullRequests)
     const commitPromises = pullRequests.map(pr => {
       return getPullRequestCommits({ user, repo, number: pr.number })
     })
@@ -26,16 +33,12 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
     const [rateLimit] = await getRateLimit()
     const dataForClient = {
       github_api: { url, rate_limit: rateLimit.rate.remaining },
-      links: link ? openPRsPaginationLinks(link, encodeURI(repoURL)) : null,
+      links: headers.link ? openPRsPaginationLinks(headers.link, encodeURI(repoURL)) : null,
       data: pullRequests.map((pr, idx) => {
         const { id, number, title, author } = pr
-        return {
-          id, number, title, author,
-          commit_count: commits[idx][0].length,
-          commits: commits[idx][0].map(commit => {
-            return commit.commit.message
-          }),
-        }
+        const commit_count = commits[idx][0].length
+        const com = commits[idx][0]?.map(commit => commit.commit.message)
+        return { id, number, title, author, commit_count, commits: com }
       })
     }
     res.json(dataForClient)

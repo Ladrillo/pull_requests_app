@@ -15,4 +15,5 @@ Stack: ${stack || 'No stack trace'}
   repoNameRequired: 'repo name is required',
   ownerOfRepoRequired: 'owner of repo is required',
   limitBetween1and100: 'limit between 1 and 100',
+  requestLimitReached: 'Sorry, it seems you reached your request limit',
 }
