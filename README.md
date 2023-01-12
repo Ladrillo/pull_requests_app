@@ -86,7 +86,8 @@ Example of response:
 
 ### Todo
 
-- ❗ Tests are hitting the Github API which is not great.
+- ❗ Tests are hitting the live Github API which is not great.
 - ❗ Tests should intercept such calls and mock a small response.
 - ❗ Too many fetch requests (max 100) necessary to grab the commits of the pull requests.
 - ❗ Uses Basic auth with a GitHub personal access token (hourly 5000 request limit).
+- ❗ Error due to rate limit exceeded not handled properly.
