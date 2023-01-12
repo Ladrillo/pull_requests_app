@@ -66,8 +66,8 @@ Example of response:
 ### URL Parameters
 
 - `repo` URL of GitHub repo. It will respond with a 422 on incorrect format, or 404 on not found.
-- `limit` between 1 and 100. It will default to 1 for any other value.
-- `page` between 1 and 100. It will default to 1 for any other value.
+- `limit` between 1 and 100. It will default to 1 for values outside the range.
+- `page` between 1 and 100. It will default to 1 for values outside the range.
 
 ### Features
 
