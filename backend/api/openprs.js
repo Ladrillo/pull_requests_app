@@ -34,6 +34,7 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
       data: pullRequests.map((pr, idx) => {
         const { id, number, title, author } = pr
         const commit_count = commits[idx][0].length
+        // todo, if we hit the rate limit this is sketchy
         const com = commits[idx][0]?.map(commit => commit.commit.message)
         const result = { id, number, title, author, commit_count, commits: com }
         return result
