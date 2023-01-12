@@ -28,7 +28,7 @@ This app is a thin wrapper around the GitHub API.
 
 It currently supports a single endpoint but is built to scale a bit more.
 
-[GET] /api/openprs?repo={repo}&limit={limit}&page={page}
+**[GET] /api/openprs?repo={repo}&limit={limit}&page={page}**
 
 ```js
 /*
@@ -65,11 +65,28 @@ Example of response:
 
 ### URL Parameters
 
-- `repo` URL of GitHub repo. It will respond with a 422 on incorrect format, or 404 on not found
-- `limit` between 1 and 100. It will default to 1 for any other value
-- `page` between 1 and 100. It will default to 1 for any other value
+- `repo` URL of GitHub repo. It will respond with a 422 on incorrect format, or 404 on not found.
+- `limit` between 1 and 100. It will default to 1 for any other value.
+- `page` between 1 and 100. It will default to 1 for any other value.
+
+### Features
+
+- Scalable architecture, more endpoints could be added in a maintainable manner.
+- Supports four different formats for the repo URL (credit for Regex to [Hicham](https://serverfault.com/a/917253))
+- Simple to use, on improper page & limit params 1 & 1 are used.
 
 ### Limitations
 
-- Uses Basic auth with a GitHub personal access token
-- With a token there is an hourly 5000-request limit
+- Will list 250 commits per pull request max.
+- Dependant on the GitHub API rate limits.
+
+### Tests
+
+- Run `npm test`
+
+### Todo
+
+- ❗ Tests are hitting the Github API which is not great.
+- ❗ Tests should intercept such calls and mock a small response.
+- ❗ Too many fetch requests (max 100) necessary to grab the commits of the pull requests.
+- ❗ Uses Basic auth with a GitHub personal access token (hourly 5000 request limit).
