@@ -25,7 +25,6 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
     if (pullRequests.message === 'Not Found') {
       return next({ status: 404, message: errors.nonExistingRepo })
     }
-    console.log(pullRequests)
     const commitPromises = pullRequests.map(pr => {
       return getPullRequestCommits({ user, repo, number: pr.number })
     })
@@ -38,7 +37,8 @@ router.get('/api/openprs', validateOpenPRsQuery, async (req, res, next) => {
         const { id, number, title, author } = pr
         const commit_count = commits[idx][0].length
         const com = commits[idx][0]?.map(commit => commit.commit.message)
-        return { id, number, title, author, commit_count, commits: com }
+        const result = { id, number, title, author, commit_count, commits: com }
+        return result
       })
     }
     res.json(dataForClient)
