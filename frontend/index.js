@@ -55,7 +55,7 @@
         }
         if (json.github_api?.rate_limit) {
           ratelimit.textContent = `
-            See the Console and Network tabs for more info. ${json.rate_limit} requests left!
+            See the Console and Network tabs for more info. ${json.github_api?.rate_limit} requests left!
           `
         }
       }

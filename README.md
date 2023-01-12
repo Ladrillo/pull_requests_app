@@ -28,7 +28,7 @@ This app is a thin wrapper around the GitHub API.
 
 It currently supports a single endpoint but is built to scale a bit more.
 
-**[GET] /api/openprs?repo={repo}&limit={limit}&page={page}**
+**[GET] https://pr-app.herokuapp.com/api/openprs?repo={repo}&limit={limit}&page={page}**
 
 ```js
 /*
