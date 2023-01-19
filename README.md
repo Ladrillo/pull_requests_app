@@ -13,7 +13,7 @@
 
   ```text
   ACCESS_TOKEN=<GitHub personal access token>
-  USERNAME=<Github username>
+  USERNAME=<GitHub username>
   ```
 
 ❗ Without the `.env` file there will be a 50-request hourly limit on the API.

@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const helmet = require('helmet')
 
-const prRouter = require('./api/openprs')
+const prRouter = require('./api/openprs.js')
 const errorHandling = require('./middleware/error.js')
 
 const server = express()
